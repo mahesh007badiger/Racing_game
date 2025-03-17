@@ -15,10 +15,10 @@ let player, cursors, obstacles, scoreText, score = 0, opponentCar;
 
 // Preload assets
 function preload() {
-    this.load.image("road", "path_to_road_image.png");  // Replace with actual track image
-    this.load.image("car", "path_to_car_image.png");    // Replace with player car image
-    this.load.image("opponent", "path_to_opponent.png"); // Opponent car
-    this.load.image("obstacle", "path_to_obstacle.png"); // Obstacle
+    this.load.image("road", "https://mahesh007badiger.github.io/pi-racing-game/resources/car.png");  // Replace with actual track image
+    this.load.image("car", "https://mahesh007badiger.github.io/pi-racing-game/resources/obstacle.png");    // Replace with player car image
+    this.load.image("opponent", "https://mahesh007badiger.github.io/pi-racing-game/resources/opponent.png"); // Opponent car
+    this.load.image("obstacle", "https://mahesh007badiger.github.io/pi-racing-game/resources/road.png"); // Obstacle
 }
 
 // Create game objects
