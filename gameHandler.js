@@ -137,34 +137,32 @@ document.addEventListener('keyup', (e) => {
 
 // SWIPE CONTROLS FOR MOBILE
 let startX = 0;
-document.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
-});
-
-document.addEventListener("touchend", (e) => {
-    let endX = e.changedTouches[0].clientX;
-    let moveAmount = gameArea.clientWidth * 0.2; // Move 20% of road width
-
-    if (startX - endX > 50) {  // Swipe left
-        player.x -= moveAmount;
-        if (player.x < 0) player.x = 0; // Prevent going off-screen
-    } 
-    if (endX - startX > 50) {  // Swipe right
-        player.x += moveAmount;
-        if (player.x > gameArea.clientWidth - 5 * window.innerWidth / 100) 
-            player.x = gameArea.clientWidth - 5 * window.innerWidth / 100;
-    }
-
-    let carElement = document.querySelector('.car');
-    carElement.style.left = player.x + "px";
-});
-
 document.addEventListener("DOMContentLoaded", () => {
-    let carElement = document.querySelector('.car');
-    if (carElement) {
-        carElement.style.width = "5vw";
-        carElement.style.height = "12vw";
-    }
-});
-    
+    let gameArea = document.querySelector(".gameArea");
+    let car = document.querySelector(".car");
+    let startX = 0;
+    let playerX = gameArea.clientWidth / 2 - car.clientWidth / 2; // Start in center
 
+    car.style.left = playerX + "px";
+
+    document.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    document.addEventListener("touchend", (e) => {
+        let endX = e.changedTouches[0].clientX;
+        let moveAmount = gameArea.clientWidth * 0.35; // Increase movement distance to 35% of road width
+
+        if (startX - endX > 40) {  // Swipe left
+            playerX -= moveAmount;
+            if (playerX < 0) playerX = 0;
+        } 
+        if (endX - startX > 40) {  // Swipe right
+            playerX += moveAmount;
+            if (playerX > gameArea.clientWidth - car.clientWidth) 
+                playerX = gameArea.clientWidth - car.clientWidth;
+        }
+
+        car.style.left = playerX + "px";
+    });
+});
