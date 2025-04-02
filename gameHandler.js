@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let gameArea = document.querySelector(".gameArea");
     let car = document.querySelector(".car");
     let startX = 0;
-    let playerX = gameArea.clientWidth / 2 - car.clientWidth / 2; // Start in center
+    let playerX = (gameArea.clientWidth - car.clientWidth) / 2; // Start at center
 
     car.style.left = playerX + "px";
 
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("touchend", (e) => {
         let endX = e.changedTouches[0].clientX;
-        let moveAmount = gameArea.clientWidth * 0.35; // Increase movement distance to 35% of road width
+        let moveAmount = gameArea.clientWidth * 0.35; // Move 35% of road width per swipe
 
         if (startX - endX > 40) {  // Swipe left
             playerX -= moveAmount;
@@ -166,3 +166,4 @@ document.addEventListener("DOMContentLoaded", () => {
         car.style.left = playerX + "px";
     });
 });
+
