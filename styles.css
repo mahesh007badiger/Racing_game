@@ -30,7 +30,7 @@
     transform: translateX(-50%);
 }
 .gameArea {
-    width: 90vw;
+    width: 60vw;
     height: 100vh;
     background: #2d3436;
     margin: auto;
@@ -42,11 +42,11 @@
 .score {
     position: absolute;
     top: 2vh;
-    left: 5vw;
+    left: 2vw;
     background: #10ac84;
     width: 30vw;
     line-height: 7vh;
-    text-align: center;
+    text-align: left;
     color: white;
     font-size: 1.5em;
     box-shadow: 0 5px 5px #777;
