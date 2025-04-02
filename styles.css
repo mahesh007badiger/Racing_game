@@ -3,6 +3,14 @@
     padding: 0;
     font-family: 'Josefin Sans', sans-serif;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Remove touch highlight */
+    user-select: none; /* Prevent text selection */
+}
+
+html, body {
+    overflow: hidden;
+    touch-action: manipulation; /* Prevent browser gestures */
+    height: 100%;
 }
 
 .hide {
@@ -19,45 +27,54 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
 }
 
 .gameArea {
-    width: 90vw; /* Adjust width dynamically */
-    max-width: 400px; /* Limit width for larger screens */
-    height: 100vh;
+    width: 90vw;
+    max-width: 400px;
+    height: 80vh; /* Reduced height for mobile screens */
     background: #2d3436;
     position: relative;
     overflow: hidden;
     border-right: 7px dashed #c8d6e5;
     border-left: 7px dashed #c8d6e5;
+    touch-action: none; /* Prevent scrolling when swiping */
 }
 
-/* Adjust car size based on screen width */
+/* Car styles with better mobile scaling */
 .car, .enemyCar {
-    width: 12vw;  /* Scale dynamically */
-    max-width: 50px;
+    width: 12vw;
+    min-width: 40px; /* Minimum size for visibility */
+    max-width: 60px;
     height: 18vw;
-    max-height: 70px;
-    background: red;
+    min-height: 60px;
+    max-height: 90px;
     position: absolute;
-    bottom: 120px;
+    bottom: 100px; /* Adjusted position */
     background-image: url('assets/images/car.png');
     background-repeat: no-repeat;
     background-size: contain;
+    background-position: center;
+    transition: transform 0.1s; /* Smooth movement */
 }
 
-/* Center the road lines dynamically */
+.enemyCar {
+    background-color: red; /* Fallback if image missing */
+}
+
+/* Road lines with better spacing */
 .roadLines {
     width: 2vw;
     max-width: 10px;
     height: 8vh;
-    max-height: 100px;
+    min-height: 50px;
     position: absolute;
     background: white;
-    left: calc(50% - 5px); /* Center dynamically */
+    left: calc(50% - 5px);
 }
 
-/* Scoreboard styling */
+/* Scoreboard with better mobile positioning */
 .score {
     position: absolute;
     top: 10px;
@@ -66,15 +83,16 @@
     background: #10ac84;
     width: 80%;
     max-width: 300px;
-    line-height: 50px;
+    line-height: 40px; /* Reduced height */
     text-align: center;
     color: white;
-    font-size: 1.5em;
+    font-size: clamp(14px, 4vw, 1.5em); /* Responsive font */
     box-shadow: 0 5px 5px #777;
     border-radius: 10px;
+    z-index: 10;
 }
 
-/* Start screen styling */
+/* Start screen with better mobile layout */
 .startScreen {
     position: absolute;
     background-color: #ee5253;
@@ -89,18 +107,16 @@
     width: 90%;
     max-width: 400px;
     cursor: pointer;
-    letter-spacing: 2px;
-    font-size: 18px;
-    word-spacing: 3px;
-    line-height: 30px;
-    text-transform: uppercase;
+    font-size: clamp(12px, 4vw, 18px); /* Responsive font */
+    line-height: 1.5;
+    border-radius: 10px;
     box-shadow: 0 5px 5px #777;
 }
 
 /* Level selection buttons */
 .level button {
     padding: 7px;
-    font-size: 14px;
+    font-size: clamp(12px, 3vw, 14px);
     background: white;
     border: 1px solid orangered;
     border-radius: 10px;
@@ -108,27 +124,91 @@
     cursor: pointer;
     outline: none;
     box-shadow: 0 5px 5px #777777a6;
+    margin: 5px;
+}
+
+/* Mobile Control Buttons */
+.mobile-btn {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    bottom: 20px;
+    z-index: 100;
+    opacity: 0.7;
+    border: 2px solid white;
+    touch-action: manipulation;
+}
+
+.left-btn {
+    left: 20px;
+}
+
+.right-btn {
+    right: 20px;
+}
+
+.mobile-btn:active {
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0.95);
 }
 
 /* Responsive Styles */
 @media (max-width: 600px) {
-    .startScreen {
-        font-size: 14px;
-        padding: 10px;
-        width: 80%;
+    .gameArea {
+        height: 70vh; /* More space for controls */
     }
 
-    .score {
-        font-size: 1.2em;
-        width: 90%;
+    .car, .enemyCar {
+        bottom: 120px; /* Higher position for better visibility */
     }
 
     .roadLines {
-        height: 5vh;
+        height: 6vh;
     }
 
-    .level button {
-        width: 70px;
-        font-size: 12px;
+    .mobile-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) {
+    .gameArea {
+        height: 90vh;
+    }
+    
+    .mobile-btn {
+        bottom: 10px;
+    }
+    
+    .car, .enemyCar {
+        bottom: 80px;
+    }
+}
+
+/* Very small devices */
+@media (max-width: 350px) {
+    .gameArea {
+        height: 65vh;
+    }
+    
+    .mobile-btn {
+        width: 45px;
+        height: 45px;
+        bottom: 10px;
+    }
+    
+    .score {
+        line-height: 30px;
     }
 }
