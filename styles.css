@@ -95,3 +95,28 @@ body {
     outline: none;
     box-shadow: 0 5px 5px #777777a6;
 }
+
+.controls {
+    position: absolute;
+    bottom: 5vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    background-color: #576574;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #2d3436;
+}
+
