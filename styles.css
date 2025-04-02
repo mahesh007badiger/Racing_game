@@ -30,8 +30,8 @@
     transform: translateX(-50%);
 }
 .gameArea {
-    width: 60vw;
-    height: 100vh;
+    width: 50vw;
+    height: 80vh;
     background: #2d3436;
     margin: auto;
     position: relative;
