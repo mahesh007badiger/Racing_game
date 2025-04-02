@@ -30,6 +30,7 @@ body {
     height: 8vw;
     background: red;
     position: absolute;
+    transform: translateX(-50%);
     bottom: 10vh;
     background-image: url('assets/images/car.png');
     background-repeat: no-repeat;
