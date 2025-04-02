@@ -143,15 +143,27 @@ document.addEventListener("touchstart", (e) => {
 
 document.addEventListener("touchend", (e) => {
     let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) keys.ArrowLeft = true;
-    if (endX - startX > 50) keys.ArrowRight = true;
-    setTimeout(() => { keys.ArrowLeft = false; keys.ArrowRight = false; }, 100);
+    let moveAmount = gameArea.clientWidth * 0.2; // Move 20% of road width
+
+    if (startX - endX > 50) {  // Swipe left
+        player.x -= moveAmount;
+        if (player.x < 0) player.x = 0; // Prevent going off-screen
+    } 
+    if (endX - startX > 50) {  // Swipe right
+        player.x += moveAmount;
+        if (player.x > gameArea.clientWidth - 5 * window.innerWidth / 100) 
+            player.x = gameArea.clientWidth - 5 * window.innerWidth / 100;
+    }
+
+    let carElement = document.querySelector('.car');
+    carElement.style.left = player.x + "px";
 });
+
 document.addEventListener("DOMContentLoaded", () => {
     let carElement = document.querySelector('.car');
     if (carElement) {
         carElement.style.width = "5vw";
-        carElement.style.height = "8vw";
+        carElement.style.height = "12vw";
     }
 });
     
