@@ -140,32 +140,38 @@ document.addEventListener('keyup', (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     let gameArea = document.querySelector(".gameArea");
     let car = document.querySelector(".car");
-    let startX = 0;
-    let playerX = (gameArea.clientWidth - car.clientWidth) / 2; // Start in center
-    car.style.transform = `translateX(${playerX}px)`;
 
+    let startX = 0;
+    let playerX = (gameArea.clientWidth - car.clientWidth) / 2; // Start at center
+    car.style.left = playerX + "px";  // Set initial position
+
+    // Listen for swipe start
     document.addEventListener("touchstart", (e) => {
         startX = e.touches[0].clientX;
-        console.log("Touch start:", startX);
     });
 
-    document.addEventListener("touchend", (e) => {
-        let endX = e.changedTouches[0].clientX;
-        let moveAmount = gameArea.clientWidth * 0.35; // Move 35% of road width
-        console.log("Touch end:", endX, "Move amount:", moveAmount);
+    // Listen for swipe move
+    document.addEventListener("touchmove", (e) => {
+        let currentX = e.touches[0].clientX;
+        let moveThreshold = 10; // Minimum movement needed for swipe
 
-        if (startX - endX > 40) {  // Swipe left
-            playerX -= moveAmount;
-            if (playerX < 0) playerX = 0;
-            console.log("Moving Left:", playerX);
-        } 
-        if (endX - startX > 40) {  // Swipe right
-            playerX += moveAmount;
-            if (playerX > gameArea.clientWidth - car.clientWidth) 
-                playerX = gameArea.clientWidth - car.clientWidth;
-            console.log("Moving Right:", playerX);
+        let moveAmount = gameArea.clientWidth * 0.3; // Move 30% of the road width
+
+        if (Math.abs(currentX - startX) > moveThreshold) {
+            if (currentX < startX) {
+                // Swipe Left
+                playerX -= moveAmount;
+                if (playerX < 0) playerX = 0;
+            } else {
+                // Swipe Right
+                playerX += moveAmount;
+                if (playerX > gameArea.clientWidth - car.clientWidth)
+                    playerX = gameArea.clientWidth - car.clientWidth;
+            }
+            
+            car.style.left = playerX + "px";  // Update position
+            startX = currentX;  // Reset start position to prevent multiple moves per swipe
         }
-
-        car.style.transform = `translateX(${playerX}px)`;
     });
 });
+
