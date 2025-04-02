@@ -30,7 +30,6 @@ body {
     height: 8vw;
     background: red;
     position: absolute;
-    transform: translateX(-50%);
     bottom: 10vh;
     background-image: url('assets/images/car.png');
     background-repeat: no-repeat;
@@ -53,6 +52,7 @@ body {
     overflow: hidden;
     border-right: 0.5vw dashed #c8d6e5;
     border-left: 0.5vw dashed #c8d6e5;
+    touch-action: none;
 }
 .score {
     position: absolute;
