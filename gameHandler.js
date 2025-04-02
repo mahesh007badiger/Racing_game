@@ -140,38 +140,26 @@ document.addEventListener('keyup', (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     let gameArea = document.querySelector(".gameArea");
     let car = document.querySelector(".car");
+    let leftBtn = document.getElementById("leftBtn");
+    let rightBtn = document.getElementById("rightBtn");
 
-    let startX = 0;
     let playerX = (gameArea.clientWidth - car.clientWidth) / 2; // Start at center
-    car.style.left = playerX + "px";  // Set initial position
+    car.style.left = playerX + "px";
 
-    // Listen for swipe start
-    document.addEventListener("touchstart", (e) => {
-        startX = e.touches[0].clientX;
+    let moveAmount = gameArea.clientWidth * 0.2; // Move 20% of road width per tap
+
+    leftBtn.addEventListener("click", () => {
+        playerX -= moveAmount;
+        if (playerX < 0) playerX = 0;
+        car.style.left = playerX + "px";
     });
 
-    // Listen for swipe move
-    document.addEventListener("touchmove", (e) => {
-        let currentX = e.touches[0].clientX;
-        let moveThreshold = 10; // Minimum movement needed for swipe
-
-        let moveAmount = gameArea.clientWidth * 0.3; // Move 30% of the road width
-
-        if (Math.abs(currentX - startX) > moveThreshold) {
-            if (currentX < startX) {
-                // Swipe Left
-                playerX -= moveAmount;
-                if (playerX < 0) playerX = 0;
-            } else {
-                // Swipe Right
-                playerX += moveAmount;
-                if (playerX > gameArea.clientWidth - car.clientWidth)
-                    playerX = gameArea.clientWidth - car.clientWidth;
-            }
-            
-            car.style.left = playerX + "px";  // Update position
-            startX = currentX;  // Reset start position to prevent multiple moves per swipe
-        }
+    rightBtn.addEventListener("click", () => {
+        playerX += moveAmount;
+        if (playerX > gameArea.clientWidth - car.clientWidth)
+            playerX = gameArea.clientWidth - car.clientWidth;
+        car.style.left = playerX + "px";
     });
 });
+
 
