@@ -12,9 +12,19 @@ gameOver.src = "assets/audio/gameOver_theme.mp3";
 
 const levelSpeed = { easy: 7, moderate: 10, difficult: 14 };
 let keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
-let player = { speed: 7, score: 0 };
+let player = { speed: 7, score: 0, isMoving: false, moveDirection: null };
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+
+// Mobile control buttons
+const leftBtn = document.createElement('div');
+const rightBtn = document.createElement('div');
+leftBtn.className = 'mobile-btn left-btn';
+rightBtn.className = 'mobile-btn right-btn';
+gameArea.appendChild(leftBtn);
+gameArea.appendChild(rightBtn);
 
 level.addEventListener('click', (e) => {
     player.speed = levelSpeed[e.target.id];
@@ -23,6 +33,10 @@ level.addEventListener('click', (e) => {
 startScreen.addEventListener('click', () => {
     startScreen.classList.add('hide');
     gameArea.innerHTML = "";
+
+    // Re-add mobile controls
+    gameArea.appendChild(leftBtn);
+    gameArea.appendChild(rightBtn);
 
     player.start = true;
     gameStart.play();
@@ -73,6 +87,7 @@ function onCollision(a, b) {
 
 function onGameOver() {
     player.start = false;
+    player.isMoving = false;
     gameStart.pause();
     gameOver.play();
     startScreen.classList.remove('hide');
@@ -81,8 +96,8 @@ function onGameOver() {
 
 function moveRoadLines() {
     document.querySelectorAll('.roadLines').forEach((item) => {
-        if (item.y >= window.innerHeight) {
-            item.y -= window.innerHeight;
+        if (item.y >= gameArea.offsetHeight) {
+            item.y -= gameArea.offsetHeight;
         }
         item.y += player.speed;
         item.style.top = item.y + "px";
@@ -94,7 +109,7 @@ function moveEnemyCars(carElement) {
         if (onCollision(carElement, item)) {
             onGameOver();
         }
-        if (item.y >= window.innerHeight) {
+        if (item.y >= gameArea.offsetHeight) {
             item.y = -300;
             item.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - 50)) + "px";
         }
@@ -111,10 +126,21 @@ function gamePlay() {
         moveRoadLines();
         moveEnemyCars(carElement);
 
+        // Handle keyboard controls
         if (keys.ArrowUp && player.y > (road.top + 70)) player.y -= player.speed;
         if (keys.ArrowDown && player.y < (road.bottom - 85)) player.y += player.speed;
         if (keys.ArrowLeft && player.x > 0) player.x -= player.speed;
         if (keys.ArrowRight && player.x < (road.width - 70)) player.x += player.speed;
+
+        // Handle touch movement
+        if (player.isMoving) {
+            if (player.moveDirection === 'left' && player.x > 0) {
+                player.x -= player.speed * 2;
+            }
+            if (player.moveDirection === 'right' && player.x < (road.width - 70)) {
+                player.x += player.speed * 2;
+            }
+        }
 
         carElement.style.top = player.y + "px";
         carElement.style.left = player.x + "px";
@@ -125,30 +151,84 @@ function gamePlay() {
     }
 }
 
+// Keyboard controls
 document.addEventListener('keydown', (e) => {
-    e.preventDefault();
-    keys[e.key] = true;
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        keys[e.key] = true;
+    }
 });
 
 document.addEventListener('keyup', (e) => {
-    e.preventDefault();
-    keys[e.key] = false;
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        keys[e.key] = false;
+    }
 });
 
-// Swipe Controls for Mobile
-
+// Enhanced Touch Controls
 document.addEventListener("touchstart", (e) => {
+    e.preventDefault();
     touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
 });
+
+document.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+}, { passive: false });
 
 document.addEventListener("touchend", (e) => {
+    e.preventDefault();
     touchEndX = e.changedTouches[0].clientX;
-    let swipeDistance = touchStartX - touchEndX;
+    touchEndY = e.changedTouches[0].clientY;
     
-    if (swipeDistance > 50 && player.x < gameArea.offsetWidth - 70) {
-        player.x += player.speed * 3; // Swipe Right
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+    
+    // Check if it's a horizontal swipe (more horizontal than vertical movement)
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 50) { // Swipe right
+            player.x = Math.min(player.x + (player.speed * 3), gameArea.offsetWidth - 70);
+        } else if (dx < -50) { // Swipe left
+            player.x = Math.max(player.x - (player.speed * 3), 0);
+        }
     }
-    if (swipeDistance < -50 && player.x > 0) {
-        player.x -= player.speed * 3; // Swipe Left
+}
+
+// Mobile button controls
+leftBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    player.isMoving = true;
+    player.moveDirection = 'left';
+});
+
+leftBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    player.isMoving = false;
+});
+
+rightBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    player.isMoving = true;
+    player.moveDirection = 'right';
+});
+
+rightBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    player.isMoving = false;
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    if (player.start) {
+        let carElement = document.querySelector('.car');
+        if (carElement) {
+            player.x = Math.min(player.x, gameArea.offsetWidth - 70);
+            carElement.style.left = player.x + 'px';
+        }
     }
 });
