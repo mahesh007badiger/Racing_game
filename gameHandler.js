@@ -136,34 +136,36 @@ document.addEventListener('keyup', (e) => {
 });
 
 // SWIPE CONTROLS FOR MOBILE
-let startX = 0;
+// let startX = 0;
 document.addEventListener("DOMContentLoaded", () => {
     let gameArea = document.querySelector(".gameArea");
     let car = document.querySelector(".car");
     let startX = 0;
-    let playerX = (gameArea.clientWidth - car.clientWidth) / 2; // Start at center
-
-    car.style.left = playerX + "px";
+    let playerX = (gameArea.clientWidth - car.clientWidth) / 2; // Start in center
+    car.style.transform = `translateX(${playerX}px)`;
 
     document.addEventListener("touchstart", (e) => {
         startX = e.touches[0].clientX;
+        console.log("Touch start:", startX);
     });
 
     document.addEventListener("touchend", (e) => {
         let endX = e.changedTouches[0].clientX;
-        let moveAmount = gameArea.clientWidth * 0.35; // Move 35% of road width per swipe
+        let moveAmount = gameArea.clientWidth * 0.35; // Move 35% of road width
+        console.log("Touch end:", endX, "Move amount:", moveAmount);
 
         if (startX - endX > 40) {  // Swipe left
             playerX -= moveAmount;
             if (playerX < 0) playerX = 0;
+            console.log("Moving Left:", playerX);
         } 
         if (endX - startX > 40) {  // Swipe right
             playerX += moveAmount;
             if (playerX > gameArea.clientWidth - car.clientWidth) 
                 playerX = gameArea.clientWidth - car.clientWidth;
+            console.log("Moving Right:", playerX);
         }
 
-        car.style.left = playerX + "px";
+        car.style.transform = `translateX(${playerX}px)`;
     });
 });
-
